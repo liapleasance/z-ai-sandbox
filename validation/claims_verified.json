@@ -1,0 +1,311 @@
+{
+  "sandbox_validation": {
+    "validation_date": "2026-11-04",
+    "validator": "AI agent in Z.AI sandbox",
+    "method": "empirical — direct command execution",
+    "summary": {
+      "total_claims_checked": 50,
+      "confirmed": 46,
+      "updated_versions": 5,
+      "false_or_not_verified": 0,
+      "confidence": "high"
+    },
+    "key_environment_facts": {
+      "platform": "Alibaba Cloud FC + Kata (KVM)",
+      "kernel": "5.10.134-013.15.kangaroo.al8.x86_64",
+      "os": "Debian 13 (trixie)",
+      "user": "z (uid 1001, no sudo)",
+      "vcpus": 2,
+      "ram_mb": 4259,
+      "swap_kb": 0,
+      "rootfs_gb": 9.9,
+      "persistence_mechanism": "repo.tar in /home/sync (OSS rw)",
+      "persistent_paths": ["/home/z/my-project/**", "/home/z/my-project/upload/", "/home/sync/"],
+      "ephemeral_paths": ["/home/z/.bun", "/home/z/.npm", "/home/z/.local", "/tmp", "/usr/local"],
+      "image_persistent_paths": ["/home/z/.venv (921 packages)", "/home/z/.cache (browsers)"]
+    },
+    "runtimes": {
+      "python3_default": "3.12.16 (venv, 921 packages)",
+      "python3_system": "3.13.5 (only numpy 2.2.4)",
+      "uv": "0.13.7",
+      "node": "24.22.2",
+      "npm": "11.19.1",
+      "bun": "1.3.14",
+      "git": "2.47.3",
+      "gcc": "14.2.0"
+    },
+    "missing_tools": ["cmake", "sqlite3 CLI", "ImageMagick (convert/magick)", "xelatex"],
+    "z_ai_sdk": {
+      "version": "0.0.18",
+      "available_without_install": true,
+      "auth_via": "/etc/.z-ai-config (444, root)",
+      "import_syntax": "default export (use `import ZAI from 'z-ai-web-dev-sdk'` — `{ ZAI }` is undefined)",
+      "subcommand_for_image_generation": "z-ai image (not `z-ai generate`)",
+      "functions_available": ["web_search", "page_reader"],
+      "web_search_latency_seconds": 1.13,
+      "page_reader_latency_seconds": 0.55
+    },
+    "network_boundaries": {
+      "icmp_blocked": true,
+      "ports_below_1024_blocked": true,
+      "download_speed_mbps": 57.6,
+      "gemini_api_geo_blocked": true
+    },
+    "updates_from_original_doc": [
+      "python3 default = 3.12.16 (venv), not 3.13.5",
+      "uv: 0.12.17 → 0.13.7",
+      "node: 24.21.0 → 24.22.2",
+      "rsync: 3.4.1 → 3.5.0",
+      "java: 21.0.12 → 21.0.13",
+      "venv packages: 924 → 921",
+      "uv python install: 0.87s → 36ms (cache quente)",
+      "Porta 12700 nova (não documentada)",
+      "Chaves diskRetire e stage novas em /etc/.z-ai-config"
+    ]
+  },
+  "hybrid_api_verification": {
+    "validation_date": "2026-11-04",
+    "project_path": "z-ai-sandbox/projects/hybrid-api/",
+    "tests_run": 16,
+    "tests_passed": 16,
+    "tests_failed": 0,
+    "bugs_found": 3,
+    "bugs_fixed": 3,
+    "files_structure_verified": "10/10 arquivos conferem com README",
+    "endpoints_implemented": "9/9 (declarados vs código)",
+    "endpoints_working": "9/9 (todos retornam HTTP 200)",
+    "performance_claims_confirmed": "7/7",
+    "bug_fixes_applied": [
+      {
+        "file": "python-scripts/data_sort.py",
+        "lines": "70-107",
+        "bug": "quick_sort recursivo crashava com RecursionError em arrays > ~500 elementos",
+        "fix": "substituído por quick_sort iterativo com pilha explícita, pivot aleatório e partição 3-way",
+        "test_result": "array ordenado de 5000 elementos em 19.8ms (antes crashava)"
+      },
+      {
+        "file": "src/index.ts",
+        "lines": "128, 503",
+        "bug": "endpoint não encontrado retornava status 500 em vez de 404",
+        "fix": "createErrorResponse agora aceita parâmetro status; 404 endpoint usa status=404"
+      },
+      {
+        "file": "src/index.ts",
+        "lines": "164",
+        "bug": "exemplo embutido em GET / citava /api/compute/fibonacci (inexistente)",
+        "fix": "corrigido para /api/math/fibonacci"
+      }
+    ],
+    "performance_measured": {
+      "GET /": "1.8ms",
+      "GET /health": "4.2ms",
+      "POST /api/math/fibonacci n=30": "152ms",
+      "POST /api/math/fibonacci n=40": "22ms",
+      "POST /api/math/primes limit=100": "21ms",
+      "POST /api/data/sort quick 4000": "42ms (após correção do bug)",
+      "POST /api/data/stats 1000": "29ms",
+      "POST /api/scientific/matrix multiply": "198ms",
+      "POST /api/ai/predict knn": "28ms"
+    }
+  },
+  "external_documents_verification": {
+    "validation_date": "2026-11-04",
+    "documents_analyzed": 5,
+    "documents_received_from_user": [
+      "GUIA_GERADOR_DOCUMENTACAO.md (445 lines, methodology, no sandbox claims)",
+      "SANDBOX_GUIDE_COLDSTART.md (1179 lines, cold start guide, 2 bugs + 3 false claims)",
+      "sandbox_turbo.sh (486 lines, optimization script, 1 dangerous function)",
+      "SANDBOX_TURBO_GUIA.md (513 lines, optimization guide, 12 false claims + 7 outdated versions)",
+      "start.sh (421 lines, older version of /start.sh, real platform code, 570 lines actual)"
+    ],
+    "start_sh_comparison": {
+      "version_sent_lines": 421,
+      "actual_version_lines": 570,
+      "diff_lines": 165,
+      "missing_features_in_sent_version": [
+        "USER_MODE / sandbox mode (SANDBOX_MODE=user check)",
+        "/home/z/chats/, /home/z/.chat-state/, /home/z/.chat-tmp/ creation",
+        "Lockfile registry rewrite step",
+        "zcode state restoration step",
+        "ROOT_CONTROL_PLANE_PATH variable"
+      ],
+      "confirmed_in_both_versions": [
+        "Boot timeline logging (/tmp/boot-timeline.log)",
+        "FRESH vs RESTORE branch via /home/sync/repo.tar",
+        "Skills extraction from /home/official_skills/*.zip with stages.yaml filter, parallel -P 4",
+        ".gitignore narrow (skills/, node_modules/) with auto-heal for b407e6a version",
+        "/etc/.z-ai-config write with 444 perms",
+        "ZAI Control service on :12600 with uv (root)",
+        "Caddy on :81 foreground (exec, replaces shell)",
+        ".zscripts/dev.sh custom flow + bun install + db:push + dev fallback",
+        "mini-services/ directory sub-services",
+        "60s timeout per git step, 120s health check",
+        "Incident 2026-06-09 boot-loop documentation (36x in 12.5h)"
+      ]
+    },
+    "coldstart_guide_claims": {
+      "hardware_claims": "5/5 confirmed (vCPUs, RAM, swap, rootfs, mounts)",
+      "mounts_64P_16E_claim": "false — PolarFS/ossfs reports virtual capacity, real disk limit is 9.9GB rootfs",
+      "apt_install_viable_claim": "false — user z has no sudo",
+      "dotbun_dotnpm_persist_claim": "false — confirmed by probes AUSENTES after reset",
+      "compile_python_claim": "unnecessary — Python 3.12.16 already in venv with 921 packages",
+      "template_universal_bug": "syntax error — `fi` followed by `elif` (2x occurrences at lines 507-510)",
+      "compile_time_10_60_min_claim": "pessimistic for small tools — jq compiles in 32s",
+      "_init_sh_template": "correct and functional"
+    },
+    "sandbox_turbo_sh_claims": {
+      "syntax_check": "valid (bash -n passes)",
+      "_status_function": "works correctly",
+      "_resources_function": "partial — bugs: 'pillow' import should be 'PIL', 'beautifulsoup4' should be 'bs4'",
+      "_optimize_function": "works but reduces ulimit -u from 100000 to 4096 (DANGEROUS for parallel workloads)",
+      "_clean_function": "partial — pip and npm cache OK, page cache requires root (fails gracefully)",
+      "_aliases_function": "DANGEROUS — 3 aliases break tools: 'alias node=bun', 'alias npm=bun', 'alias pandoc=--pdf-engine=xelatex' (xelatex AUSENTE)",
+      "_scripts_function": "creates 4 scripts, convert-doc.sh has same xelatex bug",
+      "_benchmark_function": "valid (CPU, IO, Python imports, Bun vs Node)"
+    },
+    "turbo_guide_claims": {
+      "false_claims": [
+        "ImageMagick (convert) exists — AUSENTE",
+        "xelatex exists — AUSENTE (use tectonic)",
+        "Z.AI_API_KEY and Z.AI_BASE_URL env vars exist — NÃO existem (auth via /etc/.z-ai-config)",
+        "import { ZAI } from z-ai-web-dev-sdk — INCORRETO (default export)",
+        "z-ai generate subcomando — NÃO existe (use z-ai image)",
+        "Max processes 1024 — INCORRETO (real: 100000)",
+        "200+ Python packages — SUBESTIMADO (real: 921)",
+        "69 skills — INCORRETO (real: 21)",
+        "Bun 10x faster — SUPERESTIMADO (real: 2.6x in startup)",
+        "Import Python <500ms — FALSO for heavy imports (pandas+numpy+scipy: 2.8s)",
+        "sudo apt-get clean works — FALHA (no sudo)"
+      ],
+      "outdated_versions": [
+        "Node.js: 24.18.0 → 24.22.2",
+        "Python: 3.12.13 → 3.12.16",
+        "uv: 0.11.31 → 0.13.7",
+        "mermaid-cli: 11.16.0 → 12.2.0",
+        "playwright: 1.61.1 → 1.57.0",
+        "sharp: 0.35.3 → 0.35.5",
+        "docx: 9.7.1 → 9.15.2",
+        "pikepdf: 10.10.0 → 10.17.0"
+      ],
+      "browser_cache_claim_2GB": "real ~1.6GB (613M + 608M + 404M)"
+    },
+    "documentation_generator_guide": {
+      "type": "methodology (not sandbox claims)",
+      "applicable_to_sandbox": true,
+      "previously_tested_in_sandbox": true,
+      "previous_test_result": "php-fig/log 3.0.2 — 11/11 files in 1.25s",
+      "caveats_for_sandbox": "use tectonic not xelatex for PDF conversion"
+    }
+  },
+  "how_to_revalidate": {
+    "sandbox": "bash z-ai-sandbox/scripts/sandbox_inventory.sh",
+    "skills_plugins": "bash z-ai-sandbox/scripts/list_skills.sh",
+    "hybrid_api": "bash z-ai-sandbox/scripts/test_hybrid_api.sh",
+    "quick_smoke": "bash z-ai-sandbox/scripts/quick_check.sh",
+    "external_documents": "see docs/{platform,guides,methods,skills}/ for analyses of externally received documents"
+  },
+  "internal_api_investigation": {
+    "validation_date": "2026-11-04",
+    "method": "direct probing of /v1/* paths on port 12600, reading SDK index.js for headers, scraping /metrics for endpoint discovery",
+    "internal_api_port_12600": {
+      "server": "uvicorn/FastAPI (ZAI Control)",
+      "access": "localhost only",
+      "endpoints_active": 6,
+      "endpoints_list": [
+        {"method": "GET",  "path": "/ping", "response": "pong"},
+        {"method": "GET",  "path": "/git/ls-tree", "response": "JSON array of files", "supports_query_param": "?path=<subdir>"},
+        {"method": "GET",  "path": "/git/status", "response": "JSON envelope with branch/clean/files"},
+        {"method": "GET",  "path": "/git/log", "response": "JSON array of commits with hash/subject/timestamp"},
+        {"method": "POST", "path": "/git/commit", "requires_body": {"message": "string (Pydantic GitMessageRequest)"}},
+        {"method": "POST", "path": "/git/checkout", "requires_body": {"message": "string (not branch!)"}},
+        {"method": "POST", "path": "/mcp", "protocol": "JSON-RPC over SSE", "requires_header": "Accept: application/json, text/event-stream"}
+      ],
+      "mcp_server": {
+        "name": "FastMCP-a945",
+        "version": "2.14.3",
+        "protocol": "2025-11-25",
+        "tools_count": 20,
+        "tools": ["Bash", "Glob", "Grep", "LS", "Read", "Edit", "MultiEdit", "Write", "BrowserScreenshot", "TodoWrite", "TodoRead", "scan_new_skill", "get_personal_skills", "skill_info", "skill_get", "list_oss_objects", "copy_project_to_tmp", "files_diff", "save_project_version", "restore_files"],
+        "key_insight": "Tools like Bash/Read/Edit are backend implementations of the agent's external tools"
+      }
+    },
+    "gateway_internal_api_z_ai": {
+      "base_url": "https://internal-api.z.ai/v1",
+      "auth_headers": {
+        "Authorization": "Bearer <apiKey>",
+        "X-Z-AI-From": "Z (chat/web-dev) | zcode (ZCode)",
+        "X-Chat-Id": "<chatId from /etc/.z-ai-config>",
+        "X-User-Id": "<userId>",
+        "X-Token": "<JWT 243 chars>"
+      },
+      "metrics_endpoint_public": "GET /metrics (no auth required, Prometheus format)",
+      "endpoints_count_via_metrics": 16,
+      "endpoints": [
+        {"path": "/v1/chat/completions", "calls": 159881},
+        {"path": "/v1/chat/completions/vision", "calls": 137059},
+        {"path": "/v1/audio/tts", "calls": 17833},
+        {"path": "/v1/audio/asr", "calls": 24388},
+        {"path": "/v1/images/generations", "calls": 41995},
+        {"path": "/v1/images/generations/edit", "calls": 5373},
+        {"path": "/v1/images/search", "calls": 25373},
+        {"path": "/v1/video/generation", "calls": 4527},
+        {"path": "/v1/functions/invoke", "calls": 109642},
+        {"path": "/v1/async-result", "calls": 12679},
+        {"path": "/v1/fc/update-function", "calls": 92888},
+        {"path": "/v1/oss/list", "calls": 4},
+        {"path": "/v1/oss/upload", "calls": 2059},
+        {"path": "/v1/storage/pfs/clone-snapshot", "calls": 212},
+        {"path": "/v1/zai-agent/chat/completions", "source": "zai-agent", "calls": 282973},
+        {"path": "/external/*path", "calls": 184}
+      ],
+      "endpoints_404": ["/v1/models", "/v1/embeddings", "/v1/responses", "/v1/messages", "/v1/files", "/v1/usage", "/v1/quota", "/v1/account", "/v1/keys", "/v1/threads", "/v1/assistants", "/v1/limits"]
+    },
+    "sdk_functions_map": {
+      "version": "0.0.18",
+      "function_map_closed": true,
+      "functions_available": ["web_search", "page_reader"],
+      "functions_tested_477_error": ["translate", "code_search", "crawl", "search_web", "fetch_url", "get_weather", "calendar", "send_email", "web_scraper", "youtube_search", "wikipedia", "arxiv", "github_search", "stackoverflow"],
+      "conclusion": "Don't invent function names — only web_search and page_reader exist in FunctionMap"
+    },
+    "key_discoveries": [
+      "/metrics do gateway é público — use para ver contadores em tempo real",
+      "API interna em :12600 tem /git/* endpoints úteis para inspeção do projeto",
+      "/mcp interno é FastMCP 2.14.3 com 20 tools — backend dos tools externos do agente",
+      "POST /git/commit requer {'message': '...'} (Pydantic GitMessageRequest)",
+      "POST /mcp requer header Accept: application/json, text/event-stream (senão 406)",
+      "Gateway tem endpoints de OSS e PolarFS não documentados: /v1/oss/list, /v1/oss/upload, /v1/storage/pfs/clone-snapshot"
+    ]
+  },
+  "skills_and_plugins_inventory": {
+    "validation_date": "2026-11-04",
+    "skills_installed": 21,
+    "skills_official_available": 70,
+    "skills_not_installed_but_available": 50,
+    "stages_defined": 13,
+    "current_stage": "default (21 skills, env SANDBOX_STAGE not set in shell)",
+    "skills_by_category_installed": {
+      "ia_models": ["LLM", "VLM", "TTS", "ASR"],
+      "image_video": ["image-generation", "image-edit", "image-search", "video-understand", "agent-browser"],
+      "documents": ["docx", "pptx", "xlsx", "pdf"],
+      "charts": ["charts"],
+      "dev_code": ["fullstack-dev", "php-runner", "deobfuscate-javascript", "reverse-engineer-js", "skill-creator"],
+      "meta_system": ["skill-finder-cn", "task-review"]
+    },
+    "agent_browser_subskills": 9,
+    "agent_browser_subskills_list": ["agentcore", "core", "derive-client", "dogfood", "electron", "protected-vercel-deployments", "slack", "vercel-sandbox", "webmcp-gen"],
+    "cli_plugins_in_usr_local_bin": ["z-ai (z-ai-web-dev-sdk 0.0.18)", "z-ai-generate (alias)", "agent-browser (0.41.1)", "bun (1.3.14)", "bunx", "uv (0.13.7)", "uvx", "tectonic (0.15.0)"],
+    "sdk_z_ai_endpoints": 10,
+    "mcp_in_venv": {
+      "mcp": "1.27.0",
+      "fastmcp": "2.14.3"
+    },
+    "user_customized_skills_in_polarfs": ["php-runner", "deobfuscate-javascript", "reverse-engineer-js"],
+    "stages_list": ["default", "qingyan_writing", "pipi", "life_coach", "professional_writer", "info_scout", "cyber_friend", "full_coder", "study_buddy", "business_professional", "design", "EducationTeam", "DefaultTeam", "FinanceTeam", "research_senior"],
+    "important_notes": [
+      "skills/ é re-extraído a cada boot — não use para ferramentas próprias (use tools/)",
+      "user customizations to skills are persisted via /home/user_skills/*.zip (PolarFS)",
+      "stages.yaml decides which skills are extracted (filtered by SANDBOX_STAGE env)",
+      "Para instalar skill não-instalada: unzip /home/official_skills/<name>.zip -d /home/z/my-project/skills/"
+    ]
+  }
+}

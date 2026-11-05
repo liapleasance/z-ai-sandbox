@@ -1,0 +1,1 @@
+{"name": "hybrid-bun-python-api", "version": "1.0.0", "description": "API híbrida: Bun para HTTP/E assíncrona + Python para processamento pesado", "type": "module", "scripts": {"dev": "bun run --watch src/index.ts", "start": "bun run src/index.ts"}, "dependencies": {}}
